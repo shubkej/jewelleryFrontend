@@ -1,4 +1,4 @@
-import { LoginType, SignUpType } from '../../types/Auth/AuthTypes';
+import { ForgetPasswordType, LoginType, OtpVerificationType, ResendOtpType, SignUpType } from '../../types/Auth/AuthTypes';
 import { doFetch, REQUEST_METHODS } from '../fetcher';
 import AUTH_API_ENDPOINTS from './AuthApiEndPoints';
 
@@ -9,28 +9,28 @@ export default {
   signUp: (signupDetails: SignUpType) =>
     doFetch(AUTH_API_ENDPOINTS.SINGUP, REQUEST_METHODS.POST, signupDetails),
 
-  verifyOtp: (verifyOtpDetails: LoginType) =>
+  verifyOtp: (verifyOtpDetails: OtpVerificationType) =>
     doFetch(
       AUTH_API_ENDPOINTS.OTPVERVICATION,
       REQUEST_METHODS.POST,
       verifyOtpDetails,
     ),
 
-  resendOtp: (resendOtpDetails: LoginType) =>
+  resendOtp: (resendOtpDetails: ResendOtpType) =>
     doFetch(
       AUTH_API_ENDPOINTS.RESENDOTP,
       REQUEST_METHODS.POST,
       resendOtpDetails,
     ),
 
-  forgetPassword: (forgetPasswordDetails: LoginType) =>
+  forgetPassword: (forgetPasswordDetails: ForgetPasswordType) =>
     doFetch(
       AUTH_API_ENDPOINTS.FORGETPASSWORD,
       REQUEST_METHODS.POST,
       forgetPasswordDetails,
     ),
 
-  resetPassword: (resetPasswordDetails: LoginType) =>
+  resetPassword: (resetPasswordDetails: ResendOtpType) =>
     doFetch(
       AUTH_API_ENDPOINTS.RESETPASSWORD,
       REQUEST_METHODS.POST,

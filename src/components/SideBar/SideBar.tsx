@@ -21,12 +21,13 @@ const menuItems = [
   { label: 'Home', path: '/' },
   { label: 'Login', path: '/login' },
   { label: 'Signup', path: '/signup' },
+  { label: 'Product', path: '/product' },
 ];
 
 const SideBar = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation()
-
+  const isLoggedIn = Boolean(localStorage.getItem('authToken'));
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
@@ -50,35 +51,41 @@ const SideBar = () => {
       </Box>
       <Divider />
       <List>
-    {menuItems.map((item, index) => {
-      const isActive = location.pathname === item.path;
-      return (
-        <ListItem key={item.label} disablePadding>
-          <ListItemButton
-            component={NavLink}
-            to={item.path}
-            sx={{
-              bgcolor: isActive ? 'lightgray' : 'transparent',
-              color: isActive ? 'black' : 'inherit',
-              '&:hover': {
-                bgcolor: isActive ? 'gray' : 'action.hover',
-              },
-            }}
-          >
-            <ListItemIcon
-              sx={{
-                color: isActive ? 'black' : 'inherit',
-                minWidth: 40,
-              }}
-            >
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={item.label} />
-          </ListItemButton>
-        </ListItem>
-    );
-  })}
-</List>
+        {menuItems
+          .filter((page) => {
+            if (isLoggedIn && (page.path === 'Login' || page.path === 'SignUp'))
+              return false;
+            return true;
+          })
+          .map((item, index) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <ListItem key={item.label} disablePadding>
+                <ListItemButton
+                  component={NavLink}
+                  to={item.path}
+                  sx={{
+                    bgcolor: isActive ? 'lightgray' : 'transparent',
+                    color: isActive ? 'black' : 'inherit',
+                    '&:hover': {
+                      bgcolor: isActive ? 'gray' : 'action.hover',
+                    },
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      color: isActive ? 'black' : 'inherit',
+                      minWidth: 40,
+                    }}
+                  >
+                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  </ListItemIcon>
+                  <ListItemText primary={item.label} />
+                </ListItemButton>
+              </ListItem>
+            );
+          })}
+      </List>
     </Box>
   );
 

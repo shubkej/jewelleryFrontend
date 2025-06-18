@@ -14,7 +14,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import { useFormik } from 'formik';
 import { LoginSchema } from '../../schema';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ContainerCard, inputStyles } from './ContainerCard';
 import { useDispatch } from 'react-redux';
 import { login } from '../../redux/Features/Auth/AuthThunk';
@@ -27,25 +27,27 @@ const initialValues = {
 
 const Login = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const formik = useFormik({
     initialValues,
     validationSchema: LoginSchema,
-    onSubmit: async(values, actions) => {
+    onSubmit: async (values, actions) => {
       try {
         const res = await dispatch(login(values));
-        debugger
-        if (res?.payload?.data?.status === 200) {
+        debugger;
+        if (res?.payload?.status === 200) {
           toast.success(res?.payload?.data?.message);
-          localStorage.setItem('authToken', res?.payload?.data?.payload?.token);
+          actions.resetForm();
+          localStorage.setItem('authToken', res?.payload?.data?.token);
+          navigate('/');
         }
       } catch (error) {
         console.log('Error : ', error);
       }
-
-      actions.resetForm();
     },
   });
 

@@ -11,32 +11,47 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import SideBar from '../components/SideBar/SideBar';
 
-const pages = [
-  'Home',
-  'Login',
-  'SignUp',
-  'ResetPassword',
-  'optVerfication',
-  'Product',
-  'Forgetpassword',
-];
+const pages = ['Home', 'Product', 'Login', 'SignUp'];
 const settings = [
   { ele: 'Profile', icon: <Avatar />, to: '/profile' },
   { ele: 'Account', icon: <Avatar />, to: '/account' },
-  { ele: 'Logout', icon: <Logout />, to: '/logout' },
+  { ele: 'Logout', icon: <Logout />, to: '/login' },
 ];
 
 function Header() {
   const [anchorEl, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const isLoggedIn = Boolean(localStorage.getItem('authToken'));
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorElUser(null);
+  };
+
+  const navigate = useNavigate();
+
+  const handleMenuClick = (setting: { ele: string; to: string }) => {
+    handleClose();
+
+    switch (setting.ele) {
+      case 'Logout':
+        localStorage.removeItem('authToken');
+        navigate('/login');
+        break;
+      case 'Profile':
+        navigate(setting.to);
+        break;
+      case 'Account':
+        navigate(setting.to);
+        break;
+      default:
+        navigate(setting.to);
+        break;
+    }
   };
 
   return (
@@ -99,83 +114,91 @@ function Header() {
             LOGO
           </Typography>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <NavLink
-                key={page}
-                to={`/${
-                  page.toLowerCase() !== 'home' ? page.toLowerCase() : ''
-                }`}
-                style={({ isActive }) => ({
-                  textDecoration: 'none',
-                  color: isActive ? 'red' : 'white',
-                  fontWeight: isActive ? 'bold' : 'normal',
-                  padding: '8px 16px',
-                })}
-              >
-                <Typography sx={{ textTransform: 'capitalize' }}>
-                  {page}
-                </Typography>
-              </NavLink>
-            ))}
+            {pages
+              .filter((page) => {
+                if (isLoggedIn && (page === 'Login' || page === 'SignUp'))
+                  return false;
+                return true;
+              })
+              .map((page) => (
+                <NavLink
+                  key={page}
+                  to={`/${
+                    page.toLowerCase() !== 'home' ? page.toLowerCase() : ''
+                  }`}
+                  style={({ isActive }) => ({
+                    textDecoration: 'none',
+                    color: isActive ? 'red' : 'white',
+                    fontWeight: isActive ? 'bold' : 'normal',
+                    padding: '8px 16px',
+                  })}
+                >
+                  <Typography sx={{ textTransform: 'capitalize' }}>
+                    {page}
+                  </Typography>
+                </NavLink>
+              ))}
           </Box>
-          <Box>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar
-                  alt="Remy Sharp"
-                  src="https://images.pexels.com/photos/5112926/pexels-photo-5112926.jpeg"
-                />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              anchorEl={anchorEl}
-              id="account-menu"
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              onClick={handleClose}
-              slotProps={{
-                paper: {
-                  elevation: 0,
-                  sx: {
-                    overflow: 'visible',
-                    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                    mt: 1.5,
-                    '& .MuiAvatar-root': {
-                      width: 32,
-                      height: 32,
-                      ml: -0.5,
-                      mr: 1,
-                    },
-                    '&::before': {
-                      content: '""',
-                      display: 'block',
-                      position: 'absolute',
-                      top: 0,
-                      right: 14,
-                      width: 10,
-                      height: 10,
-                      bgcolor: 'background.paper',
-                      transform: 'translateY(-50%) rotate(45deg)',
-                      zIndex: 0,
+          {isLoggedIn ? (
+            <Box>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar
+                    alt="Remy Sharp"
+                    src="https://images.pexels.com/photos/5112926/pexels-photo-5112926.jpeg"
+                  />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                anchorEl={anchorEl}
+                id="account-menu"
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+                onClick={handleClose}
+                slotProps={{
+                  paper: {
+                    elevation: 0,
+                    sx: {
+                      overflow: 'visible',
+                      filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                      mt: 1.5,
+                      '& .MuiAvatar-root': {
+                        width: 32,
+                        height: 32,
+                        ml: -0.5,
+                        mr: 1,
+                      },
+                      '&::before': {
+                        content: '""',
+                        display: 'block',
+                        position: 'absolute',
+                        top: 0,
+                        right: 14,
+                        width: 10,
+                        height: 10,
+                        bgcolor: 'background.paper',
+                        transform: 'translateY(-50%) rotate(45deg)',
+                        zIndex: 0,
+                      },
                     },
                   },
-                },
-              }}
-              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-            >
-              {settings.map((setting) => (
-                <MenuItem
-                  key={setting.to}
-                  component={Link}
-                  to={setting.to}
-                  onClick={handleClose}
-                >
-                  {setting.icon} {setting.ele}
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+                }}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+              >
+                {settings.map((setting) => (
+                  <MenuItem
+                    key={setting.to}
+                    onClick={() => handleMenuClick(setting)}
+                  >
+                    {setting.icon} {setting.ele}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          ) : (
+            <Box></Box>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

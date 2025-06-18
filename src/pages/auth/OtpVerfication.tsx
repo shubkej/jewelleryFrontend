@@ -1,25 +1,38 @@
-import {
-  Box,
-  Stack,
-  Typography,
-  useTheme,
-  useMediaQuery,
-} from '@mui/material';
+import { Box, Stack, Typography, useTheme, useMediaQuery } from '@mui/material';
 import InputFieldComponent from '../../components/InputFieldComponent/InputFieldComponent';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import { useFormik } from 'formik';
 import { otpSchema } from '../../schema';
 import { ContainerCard, inputStyles } from './ContainerCard';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { otpVerify } from '../../redux/Features/Auth/AuthThunk';
+import toast from 'react-hot-toast';
 
 const initialValues = {
   otp: '',
 };
+
 const OtpVerification = () => {
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const email = location.state?.email;
+
   const formik = useFormik({
     initialValues,
     validationSchema: otpSchema,
-    onSubmit: (values, actions) => {
-      console.log('values', values);
+    onSubmit: async (values, actions) => {
+      const otpPayload = { ...values, email };
+      try {
+        const res = await dispatch(otpVerify(otpPayload));
+        if (res?.payload?.status === 200) {
+          toast.success(res?.payload?.data?.message);
+          navigate('/');
+        }
+      } catch (error: any) {
+        toast.error(error);
+      }
       actions.resetForm();
     },
   });

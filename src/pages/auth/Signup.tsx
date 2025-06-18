@@ -14,7 +14,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import { useFormik } from 'formik';
 import { SignupSchema } from '../../schema';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ContainerCard, inputStyles } from './ContainerCard';
 import { useDispatch } from 'react-redux';
 import { signUp } from '../../redux/Features/Auth/AuthThunk';
@@ -29,6 +29,7 @@ const initialValues = {
 
 const Signup = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -36,15 +37,18 @@ const Signup = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: SignupSchema,
-    onSubmit: (values, actions) => {
+    onSubmit: async (values, actions) => {
       try {
-        const res = dispatch(signUp(values));
+        const res = await dispatch(signUp(values));
         debugger;
-        toast.success(res.data.message);
+        if (res?.payload?.status === 201) {
+          toast.success(res?.payload?.data?.message);
+          actions.resetForm();
+          navigate('/optverfication', { state: { email: values.email } });
+        }
       } catch (error: any) {
         toast.error(error);
       }
-      actions.resetForm();
     },
   });
 
