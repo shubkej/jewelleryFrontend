@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { Backdrop } from '@mui/material';
-// import './FullScreenLoader.css';
 
 interface FullScreenLoaderI {
   open: boolean;

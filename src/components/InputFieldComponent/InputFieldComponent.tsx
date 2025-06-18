@@ -59,7 +59,6 @@ const InputFieldComponent: FC<InputProps> = ({
 }) => {
   const inputId = id || `input-${name || label}`;
 
-  // Select input component based on variant
   const InputComponent =
     variant === "filled" ? FilledInput : variant === "standard" ? Input : OutlinedInput;
 

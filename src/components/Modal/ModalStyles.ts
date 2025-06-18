@@ -23,7 +23,6 @@ const ModalStyles = {
     },
     header: {
       width: "100%",
-      // borderBottom: "1px solid #e0e0e0",
       display: "flex",
       alignItems: "start",
       justifyContent: "space-between",
@@ -41,7 +40,6 @@ const ModalStyles = {
       overflow: "auto",
       maxHeight: `calc(100dvh - 20dvh - 69px)`,
       "@media (max-width: 1024px)": {
-        // maxWidth: "calc(100dvh - 20dvh - 69px)",
       },
     },
   };
