@@ -1,0 +1,25 @@
+const muiVariables = {
+  primaryColor: "#FFFFFF",
+  mainTextColor: "#0C0C0C",
+  subTextColor: "#3D3D3D",
+  textWarnColor: "#555",
+  linkTextColor: "#FFA05C",
+  primaryBtnColor: "#196FF0",
+  disabledBtnColor: "#d3d3d3",
+  secondaryBtnColor: "#1EA44B",
+  errorMessageColor: "#d32f2f",
+  deleteTextColor: "#FF443A",
+  avatarBgColor: "#F7F7F7",
+  borderColor: "#EBEBEB",
+  lightGrayColor: "#3d3d3d",
+  lightTextColor: "#ebebeb",
+  darkBackground: "#21242c",
+  progressFillColor: "#91d6fb",
+  mainFontFamily: "Poppins",
+  drawerWidth: 250,
+  mainHeadingFontSize: "16px",
+  subHeadingFontSize: "14px",
+  dateFillColor: "#127CDB",
+};
+
+export default muiVariables;
