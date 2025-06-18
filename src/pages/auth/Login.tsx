@@ -33,13 +33,16 @@ const Login = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: LoginSchema,
-    onSubmit: (values, actions) => {
+    onSubmit: async(values, actions) => {
       try {
-        const res = dispatch(login(values));
-        // debugger
-        toast.success(res.data.message);
-      } catch (error: any) {
-        toast.error(error);
+        const res = await dispatch(login(values));
+        debugger
+        if (res?.payload?.data?.status === 200) {
+          toast.success(res?.payload?.data?.message);
+          localStorage.setItem('authToken', res?.payload?.data?.payload?.token);
+        }
+      } catch (error) {
+        console.log('Error : ', error);
       }
 
       actions.resetForm();

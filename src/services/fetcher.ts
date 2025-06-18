@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import { toast } from "react-hot-toast";
 
 const instance = axios.create();
-const baseUrl = import.meta.env.VITE_REACT_LOCAL_API_URL; 
+const baseUrl = import.meta.env.VITE_REACT_LOCAL_API_URL || "http://localhost:4500/api"; 
 
 instance.interceptors.response.use(
   (res: any) => res,

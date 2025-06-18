@@ -30,7 +30,7 @@ const authSlice = createSlice({
       state.isLoading = false;
     },
   },
-  extraReducers: (builder) => {},
+  extraReducers: () => {},
 });
 
 export const { auth } = authSlice.actions;

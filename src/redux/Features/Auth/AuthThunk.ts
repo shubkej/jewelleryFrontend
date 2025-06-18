@@ -4,7 +4,6 @@ import Auth from "../../../services/Auth/Auth";
 import { LoginType, SignUpType } from "../../../types/Auth/AuthTypes";
 
 export const login: any = createAsyncThunk("login", async (data: LoginType) => {
-  // debugger
   const response: AxiosResponse = await Auth.login(data);
   return response;
 });
