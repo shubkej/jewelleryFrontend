@@ -3,9 +3,6 @@ const ImageBackground = () => (
     className="bg-image"
     style={{
       backgroundColor:"black",
-      // backgroundImage: "url('/background.jpg')",
-      // backgroundSize: 'cover',
-      // backgroundPosition: 'center',
       position: 'fixed',
       top: 0,
       left: 0,
