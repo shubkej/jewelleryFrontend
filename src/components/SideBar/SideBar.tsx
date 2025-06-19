@@ -53,7 +53,7 @@ const SideBar = () => {
       <List>
         {menuItems
           .filter((page) => {
-            if (isLoggedIn && (page.path === 'Login' || page.path === 'SignUp'))
+            if (isLoggedIn && (page.label === 'Login' || page.label === 'SignUp'))
               return false;
             return true;
           })
