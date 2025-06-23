@@ -36,7 +36,7 @@ const SortMenu: React.FC<SortMenuProps> = ({
   };
 
   const handleMenuItemClick = (
-    event: React.MouseEvent<HTMLElement>,
+    // event: React.MouseEvent<HTMLElement>,
     index: number,
   ) => {
     setSelectedIndex(index);
@@ -108,7 +108,7 @@ const SortMenu: React.FC<SortMenuProps> = ({
           <MenuItem
             key={index}
             selected={index === selectedIndex}
-            onClick={(event) => handleMenuItemClick(event, index)}
+            onClick={() => handleMenuItemClick( index)}
           >
             <img src={option?.icon} style={{width:"25px", height:"25px", marginRight:"15px"}} alt="" />
             {option?.label}
