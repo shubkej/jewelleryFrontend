@@ -104,13 +104,17 @@ const SortMenu: React.FC<SortMenuProps> = ({
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        {options.map((option:any, index:any) => (
+        {options.map((option: any, index: any) => (
           <MenuItem
             key={index}
             selected={index === selectedIndex}
-            onClick={() => handleMenuItemClick( index)}
+            onClick={() => handleMenuItemClick(index)}
           >
-            <img src={option?.icon} style={{width:"25px", height:"25px", marginRight:"15px"}} alt="" />
+            <img
+              src={option?.icon}
+              style={{ width: '25px', height: '25px', marginRight: '15px' }}
+              alt=""
+            />
             {option?.label}
           </MenuItem>
         ))}

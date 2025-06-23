@@ -23,7 +23,7 @@ const ProductCard = ({ product }: any) => {
   };
 
   return (
-    <Card sx={{ position: 'relative', borderRadius: '10px', minWidth: 275 }}>
+    <Card sx={{ position: 'relative', borderRadius: '10px'  }}>
       <Box sx={{ position: 'absolute', top: 5, right: 5, zIndex: 10 }}>
         <IconButton onClick={handleFavoriteToggle}>
           {isFavorite ? (

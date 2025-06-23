@@ -9,44 +9,40 @@ import {
   CardMedia,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import ImageCarousel from '../components/CarouselComponent/ImageCarousel';
+import { images } from '../utils/constant';
+import ButtonComponent from '../components/ButtonComponent/ButtonComponent';
 
 const Home = () => {
   const navigate = useNavigate();
   return (
     <>
+      <ImageCarousel boxSx={{ height: '90vh' }} images={images} />
       <Box
         sx={{
-          backgroundImage:
-            'url(https://images.pexels.com/photos/1457983/pexels-photo-1457983.jpeg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          height: '90vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
           textAlign: 'center',
-          color: '#fff',
+          color: 'white',
         }}
       >
-        <Box sx={{ bgcolor: 'rgba(0,0,0,0.5)', p: 4, borderRadius: 2 }}>
-          <Typography variant="h3" gutterBottom>
-            Discover Elegant Jewelry
-          </Typography>
-          <Typography variant="h6" gutterBottom>
-            Crafted with love, worn with pride
-          </Typography>
-          <Button
-            variant="contained"
-            size="large"
-            sx={{ mt: 2, bgcolor: '#d4af37' }}
-            onClick={() => navigate('/product')}
-          >
-            Shop Now
-          </Button>
-        </Box>
+        <Typography variant="h2" gutterBottom>
+          Welcome to Jeweluxe
+        </Typography>
+        <Typography variant="h5" gutterBottom>
+          Your destination for exquisite jewelry
+        </Typography>
+        <ButtonComponent
+          text="Discover Our Collection"
+          variant="contained"
+          sx={{ mt: 2, bgcolor: 'black', color: 'white', '&:hover': { bgcolor: 'red' } }}
+          onClick={() => navigate('/product')}
+        />
       </Box>
 
-      <Container sx={{ py: 6 ,color:"white"}}>
+      <Container sx={{ py: 6, color: 'white' }}>
         <Typography variant="h4" align="center" gutterBottom>
           Featured Collections
         </Typography>

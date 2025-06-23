@@ -3,3 +3,7 @@
   padding: 0;
   box-sizing: border-box;
 }
+/* App.css or your component CSS */
+.thumbs-wrapper.axis-vertical {
+  display: none !important;
+}
