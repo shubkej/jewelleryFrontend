@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 
 export default function ProductCardSkeleton() {
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ maxWidth: 345 , minWidth: 275 }}>
       <Skeleton
         variant="rectangular"
         height={220}

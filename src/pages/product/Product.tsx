@@ -1,48 +1,124 @@
-import { Box, Chip, Container, Grid, Typography } from '@mui/material';
+import { Box, Container, Grid, Typography, Pagination } from '@mui/material';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import SwapVertOutlinedIcon from '@mui/icons-material/SwapVertOutlined';
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import axios from 'axios';
 import ProductCardSkeleton from '../../components/ProductCard/ProductCardSkeleton';
-
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
+import SortMenu from '../../components/MenuItem/SortMenu';
+import FiltersPanel from '../../components/MenuItem/FiltersPanel';
+import { OPTION as options } from '../../utils/constant';
+import { getProduct } from '../../redux/Features/Product/ProductThunk';
+import { useDispatch, useSelector } from 'react-redux';
 
 const ProductCard = lazy(
   () => import('../../components/ProductCard/ProductCard'),
 );
 
-const Product = () => {
-  const [products, setproducts] = useState<any>([]);
-  const [loading, setLoading] = useState<any>(true);
+interface Option {
+  _id: string;
+  name: string;
+}
 
-  const fetch = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get('https://dummyjson.com/products');
-      setproducts(res.data.products);
-    } catch (error) {
-      console.error('Failed to fetch products:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+interface Category {
+  _id: string;
+  name: string;
+  options: Option[];
+}
+
+type FilterItem = {
+  categoryId: string;
+  subcategoryIds: string[];
+};
+type FiltersArray = FilterItem[];
+
+const Product = () => {
+  const dispatch = useDispatch();
+  const {
+    data: products,
+    isLoading,
+    pagination,
+  } = useSelector((state: any) => state.product);
+
+  const [categoriesList, setCategoriesList] = useState<Category[]>([]);
+  const [currentFilters, setCurrentFilters] = useState<
+    Record<string, string[]>
+  >({});
+  const [sortOption, setSortOption] = useState('');
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    fetch();
+    const fetchList = async () => {
+      try {
+        const res = await axios.get(
+          'http://localhost:4500/api/category/getCategoryListWithSubCategory',
+        );
+        setCategoriesList(res.data.data);
+      } catch (error) {
+        console.error('Failed to fetch categories:', error);
+      }
+    };
+    fetchList();
   }, []);
 
-  const handleFilter = () => {
-    alert('You clicked the handleFilter');
+  const fetchProducts = useCallback(async () => {
+    const categoryIds = Object.keys(currentFilters);
+    const subCategoryIds = Object.values(currentFilters).flat();
+
+    const params: any = {
+      page,
+      limit: 10,
+      category: categoryIds.join(','),
+      subCategory: subCategoryIds.join(','),
+    };
+
+    if (sortOption) params.sort = sortOption;
+
+    await dispatch(getProduct(params));
+  }, [currentFilters, sortOption, page]);
+
+  useEffect(() => {
+    if (categoriesList.length) {
+      fetchProducts();
+    }
+  }, [categoriesList, fetchProducts]);
+
+  const handleFilterChange = (filters: FiltersArray) => {
+    const filtersRecord: Record<string, string[]> = {};
+    filters.forEach(({ categoryId, subcategoryIds }) => {
+      filtersRecord[categoryId] = subcategoryIds;
+    });
+    setCurrentFilters(filtersRecord);
+    setPage(1);
   };
-  const handleSorting = () => {
-    alert('You clicked the handleSorting.');
+
+  const handleSort = (option: any) => {
+    let sort = '';
+    switch (option.label) {
+      case 'Low to High':
+        sort = 'price_asc';
+        break;
+      case 'High to Low':
+        sort = 'price_desc';
+        break;
+      case 'A to Z':
+        sort = 'name_asc';
+        break;
+      case 'Z to A':
+        sort = 'name_desc';
+        break;
+      default:
+        sort = '';
+    }
+    setSortOption(sort);
+    setPage(1); // reset to page 1
   };
 
   return (
     <Container maxWidth="lg">
       <Typography sx={{ pt: { xs: 2, sm: 5 }, color: 'white' }} variant="h5">
-        Products (4841 results)
+        Products ({pagination.totalProducts} results)
       </Typography>
+
       <Box
         sx={{
           display: 'flex',
@@ -52,61 +128,49 @@ const Product = () => {
           color: 'white',
         }}
       >
-        <Chip
-          onClick={handleFilter}
-          variant="outlined"
-          icon={<FilterAltOutlinedIcon />}
-          label="Filter"
-          deleteIcon={<KeyboardArrowDownOutlinedIcon />}
-          onDelete={handleFilter}
-          sx={{
-            fontSize: { xs: '14px', sm: '18px' },
-            padding: { xs: '0 5px', md: '0 20px' },
-            height: '35px',
-            color: 'white',
-            '& .MuiChip-deleteIcon': {
-              color: 'white',
-            },
-          }}
+        <FiltersPanel
+          onChange={handleFilterChange}
+          categoriesList={categoriesList}
         />
-
-        <Chip
-          onClick={handleFilter}
-          variant="outlined"
-          icon={<SwapVertOutlinedIcon />}
+        <SortMenu
           label="Sort By"
+          options={options}
+          onSelect={handleSort}
+          icon={<FilterAltOutlinedIcon />}
           deleteIcon={<KeyboardArrowDownOutlinedIcon />}
-          onDelete={handleSorting}
-          sx={{
-            fontSize: { xs: '14px', sm: '18px' },
-            padding: { xs: '0 5px', md: '0 20px' },
-            height: '35px',
-            color: 'white',
-            '& .MuiChip-deleteIcon': {
-              color: 'white',
-            },
-          }}
+          sx={{ bgcolor: 'transparent', color: 'white' }}
         />
       </Box>
-      <Grid
-        container
-        spacing={{ xs: 2, md: 3 }}
-        sx={{ pb: 10 }}
-      >
-        {loading
-          ? Array.from({ length: 8 }).map((_, index) => (
-              <Grid key={index} size={{ xs: 12, sm: 4, md: 3 }}>
+
+      <Grid container spacing={{ xs: 2, md: 3 }} sx={{ pb: 4 }}>
+        {isLoading
+          ? Array.from({ length: pagination.totalProducts || 4 }).map((_, index) => (
+              <Grid key={index} size={{ xs: 12, sm: 6, md: 3 }}>
                 <ProductCardSkeleton />
               </Grid>
             ))
-          : products.map((product: any, index: number) => (
-              <Grid key={index} size={{ xs: 12, sm: 4, md: 3 }}>
+          : products?.map((product: any, index: number) => (
+              <Grid key={index} size={{ xs: 12, sm: 6, md: 3 }}>
                 <Suspense fallback={<ProductCardSkeleton />}>
                   <ProductCard product={product} />
                 </Suspense>
               </Grid>
             ))}
       </Grid>
+
+      {pagination.totalPages > 1 && (
+        <Box display="flex" justifyContent="center" mt={4} mb={6}>
+          <Pagination
+            count={pagination.totalPages}
+            page={pagination.currentPage}
+            onChange={(_, value) => setPage(value)}
+            color="primary"
+            sx={{
+              '& .MuiPaginationItem-root': { color: 'white' },
+            }}
+          />
+        </Box>
+      )}
     </Container>
   );
 };

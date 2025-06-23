@@ -28,7 +28,7 @@ const OtpVerification = () => {
         const res = await dispatch(otpVerify(otpPayload));
         if (res?.payload?.status === 200) {
           toast.success(res?.payload?.data?.message);
-          navigate('/');
+          navigate('/login');
         }
       } catch (error: any) {
         toast.error(error);

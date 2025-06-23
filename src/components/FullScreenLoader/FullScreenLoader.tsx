@@ -10,7 +10,7 @@ const FullScreenLoader: FC<FullScreenLoaderI> = ({ open }) => {
     <>
       <Backdrop
         open={open}
-        sx={{ backgroundColor: 'transparent', zIndex: 10000 }}
+        sx={{ backgroundColor: 'white', zIndex: 10000 }}
       >
         <img
           src="/loader.gif"

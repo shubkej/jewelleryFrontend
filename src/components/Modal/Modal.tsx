@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
-import { Box, IconButton, Modal, Typography, SxProps } from "@mui/material";
-import ModalStyles from "./ModalStyles";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { ReactNode } from 'react';
+import { Box, IconButton, Modal, Typography, SxProps } from '@mui/material';
+import ModalStyles from './ModalStyles';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 interface CustomeModalProps {
   open: boolean;
@@ -23,7 +23,8 @@ const CustomeModal: React.FC<CustomeModalProps> = ({
       open={open}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description">
+      aria-describedby="modal-modal-description"
+    >
       <Box sx={{ ...ModalStyles.modalStyle, ...modalCss }}>
         <Box sx={ModalStyles.mainWrapper}>
           <Box sx={ModalStyles.header}>
@@ -31,7 +32,8 @@ const CustomeModal: React.FC<CustomeModalProps> = ({
             <IconButton
               sx={ModalStyles.closeIconButton}
               onClick={handleClose}
-              aria-label="Close">
+              aria-label="Close"
+            >
               <HighlightOffIcon />
             </IconButton>
           </Box>

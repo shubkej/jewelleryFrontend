@@ -11,8 +11,12 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../redux/Features/Cart/CartSlice';
+import ButtonComponent from '../ButtonComponent/ButtonComponent';
 
 const ProductCard = ({ product }: any) => {
+  const dispatch = useDispatch();
   const [isFavorite, setIsFavorite] = useState(false);
 
   const handleFavoriteToggle = () => {
@@ -20,7 +24,7 @@ const ProductCard = ({ product }: any) => {
   };
 
   return (
-    <Card sx={{ position: 'relative' }}>
+    <Card sx={{ position: 'relative', borderRadius: '10px', minWidth: 275 }}>
       <Box sx={{ position: 'absolute', top: 5, right: 5, zIndex: 10 }}>
         <IconButton onClick={handleFavoriteToggle}>
           {isFavorite ? (
@@ -31,11 +35,11 @@ const ProductCard = ({ product }: any) => {
         </IconButton>
       </Box>
 
-      <Link to={`/productDetails/${product?.id}`}>
+      <Link to={`/productDetails/${product?._id}`}>
         <CardMedia
           component="img"
           height="220"
-          image={product?.images}
+          image={product?.image?.[0]}
           alt={product?.title}
           sx={{
             objectFit: 'contain',
@@ -76,17 +80,17 @@ const ProductCard = ({ product }: any) => {
             ${product?.price}
           </Typography>
         </Box>
-        <Button
-          fullWidth
+        <ButtonComponent
+          text="Add to Cart"
           variant="contained"
           sx={{
             mt: 2,
+            width: '100%',
             bgcolor: 'black',
             '&:hover': { opacity: 0.7 },
           }}
-        >
-          Add to Cart
-        </Button>
+          onClick={() => dispatch(addToCart({ ...product, quantity: 1 }))}
+        />
       </CardContent>
     </Card>
   );

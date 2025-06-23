@@ -8,8 +8,10 @@ import {
   CardContent,
   CardMedia,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+  const navigate = useNavigate();
   return (
     <>
       <Box
@@ -37,13 +39,14 @@ const Home = () => {
             variant="contained"
             size="large"
             sx={{ mt: 2, bgcolor: '#d4af37' }}
+            onClick={() => navigate('/product')}
           >
             Shop Now
           </Button>
         </Box>
       </Box>
 
-      <Container sx={{ py: 8 }}>
+      <Container sx={{ py: 6 ,color:"white"}}>
         <Typography variant="h4" align="center" gutterBottom>
           Featured Collections
         </Typography>
@@ -86,7 +89,7 @@ const Home = () => {
         </Container>
       </Box>
 
-      <Box sx={{ py: 6 ,color:"white" }}>
+      <Box sx={{ py: 6, color: 'white' }}>
         <Container>
           <Typography variant="h4" align="center" gutterBottom>
             Get In Touch

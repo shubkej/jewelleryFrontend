@@ -10,7 +10,7 @@ instance.interceptors.response.use(
     console.log("error", error);
     if (error?.response?.status === 401) {
       localStorage.removeItem("authToken");
-      window.location.reload();
+      // window.location.reload();
       throw error;
     }
     if (

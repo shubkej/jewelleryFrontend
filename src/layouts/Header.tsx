@@ -11,10 +11,15 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import { NavLink, useNavigate } from 'react-router-dom';
 import SideBar from '../components/SideBar/SideBar';
+import { Badge } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { totalItemCount } from '../redux/Features/Cart/CartSlice';
 
-const pages = ['Home', 'Product', 'Login', 'SignUp'];
+const pages = ['Home', 'Product', 'Cart', 'Login', 'SignUp'];
 const settings = [
   { ele: 'Profile', icon: <Avatar />, to: '/profile' },
   { ele: 'Account', icon: <Avatar />, to: '/account' },
@@ -22,6 +27,7 @@ const settings = [
 ];
 
 function Header() {
+  const cartItemTotal = useSelector(totalItemCount);
   const [anchorEl, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const isLoggedIn = Boolean(localStorage.getItem('authToken'));
 
@@ -31,9 +37,7 @@ function Header() {
   const handleClose = () => {
     setAnchorElUser(null);
   };
-
   const navigate = useNavigate();
-
   const handleMenuClick = (setting: { ele: string; to: string }) => {
     handleClose();
 
@@ -118,6 +122,10 @@ function Header() {
               .filter((page) => {
                 if (isLoggedIn && (page === 'Login' || page === 'SignUp'))
                   return false;
+
+                // if (!isLoggedIn && (page === 'Cart'))
+                //   return false;
+
                 return true;
               })
               .map((page) => (
@@ -140,7 +148,48 @@ function Header() {
               ))}
           </Box>
           {isLoggedIn ? (
-            <Box>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: 3,
+              }}
+            >
+              <Box
+                sx={{
+                  display: { xs: 'none', sm: 'flex' },
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: 2,
+                }}
+              >
+                <Badge>
+                  <FavoriteBorderOutlinedIcon
+                    onClick={() => navigate('/whilshlist')}
+                    sx={{
+                      fontSize: '30px',
+                      color: 'white',
+                      '&:hover': {
+                        color: 'red',
+                      },
+                    }}
+                  />
+                </Badge>
+                <Badge color="error" badgeContent={cartItemTotal || 0}>
+                  <ShoppingCartOutlinedIcon
+                    onClick={() => navigate('/cart')}
+                    sx={{
+                      fontSize: '30px',
+                      cursor: 'pointer',
+                      color: 'white',
+                      '&:hover': {
+                        color: 'red',
+                      },
+                    }}
+                  />
+                </Badge>
+              </Box>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar

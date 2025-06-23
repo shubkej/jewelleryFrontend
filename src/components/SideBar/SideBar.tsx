@@ -19,9 +19,9 @@ import { NavLink, useLocation } from 'react-router-dom';
 
 const menuItems = [
   { label: 'Home', path: '/' },
+  { label: 'Product', path: '/product' },
   { label: 'Login', path: '/login' },
   { label: 'SignUp', path: '/signup' },
-  { label: 'Product', path: '/product' },
 ];
 
 const SideBar = () => {

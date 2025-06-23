@@ -3,7 +3,7 @@ import Router from "./routes/Router";
 import { Toaster } from "react-hot-toast";
 
 const App = () => {
-
+  
   return (
     <>
       <Router />

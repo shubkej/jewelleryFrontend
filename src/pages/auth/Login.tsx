@@ -26,7 +26,7 @@ const initialValues = {
 };
 
 const Login = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -38,12 +38,21 @@ const Login = () => {
     onSubmit: async (values, actions) => {
       try {
         const res = await dispatch(login(values));
-        debugger;
+        console.log('res', res);
+
         if (res?.payload?.status === 200) {
           toast.success(res?.payload?.data?.message);
           actions.resetForm();
           localStorage.setItem('authToken', res?.payload?.data?.token);
           navigate('/');
+        } else if (res?.payload?.status === 403) {
+          navigate('/optverfication', { state: { email: values.email } });
+        } else if (res?.payload?.status === 401) {
+          toast.error(res?.payload?.response?.data?.message);
+        } else if (res?.payload?.status === 400) {
+          toast.error(res?.payload?.response?.data?.message);
+        } else if (res?.payload?.status === 500) {
+          toast.error(res?.payload?.response?.data?.message);
         }
       } catch (error) {
         console.log('Error : ', error);

@@ -4,18 +4,32 @@ import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import { useFormik } from 'formik';
 import { ForgetPasswordSchema } from '../../schema';
 import { ContainerCard, inputStyles } from './ContainerCard';
+import { useDispatch } from 'react-redux';
+import { forgetPassword } from '../../redux/Features/Auth/AuthThunk';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
- 
 const initialValues = {
   email: '',
 };
 
 const ForgetPassword = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues,
     validationSchema: ForgetPasswordSchema,
-    onSubmit: (values, actions) => {
-      console.log('values', values);
+    onSubmit: async (values, actions) => {
+      try {
+        const res = await dispatch(forgetPassword(values));
+        if (res?.payload?.status === 200) {
+          toast.success(res?.payload?.data?.message);
+          navigate('/optverfication', { state: { email: values.email } });
+        }
+      } catch (error: any) {
+        toast.error(error);
+      }
       actions.resetForm();
     },
   });
@@ -33,7 +47,6 @@ const ForgetPassword = () => {
         px: 2,
       }}
     >
-      
       <ContainerCard>
         <Stack spacing={3} component="form" onSubmit={formik.handleSubmit}>
           <Typography

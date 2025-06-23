@@ -46,6 +46,7 @@ const Signup = () => {
           actions.resetForm();
           navigate('/optverfication', { state: { email: values.email } });
         }
+        
       } catch (error: any) {
         toast.error(error);
       }

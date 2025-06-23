@@ -9,6 +9,10 @@ import Product from '../pages/product/Product';
 import ForgetPassword from '../pages/auth/ForgetPassword';
 import VideoBackground from '../components/VIdeoAndImageWrapper/VideoBackground';
 import ImageBackground from '../components/VIdeoAndImageWrapper/ImageBackground';
+import Cart from '../pages/product/Cart';
+import ProductDetails from '../pages/product/ProductDetails';
+import PrivateRoute from './PrivateRoute/PrivateRoute';
+import PublicRoute from './PublicRoute/PublicRoute';
 
 const Router = () => {
   const location = useLocation();
@@ -29,12 +33,20 @@ const Router = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
         <Route path="/product" element={<Product />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/resetpassword" element={<ResetPassword />} />
-        <Route path="/optverfication" element={<OtpVerfication />} />
-        <Route path="/forgetpassword" element={<ForgetPassword />} />
+        <Route path="/productDetails/:id" element={<ProductDetails />} />
+
+        <Route element={<PrivateRoute />}>
+          <Route path="/cart" element={<Cart />} />
+        </Route>
+        <Route element={<PublicRoute />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/optverfication" element={<OtpVerfication />} />
+          <Route path="/forgetpassword" element={<ForgetPassword />} />
+          <Route path="/resetpassword" element={<ResetPassword />} />
+        </Route>
+        <Route path="*" element={<>Page Not Found !</>} />
       </Routes>
     </>
   );
