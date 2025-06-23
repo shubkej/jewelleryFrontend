@@ -50,7 +50,7 @@ const Product = () => {
     const fetchList = async () => {
       try {
         const res = await axios.get(
-          'http://localhost:4500/api/category/getCategoryListWithSubCategory',
+          `${import.meta.env.VITE_REACT_LOCAL_API_URL}/category/getCategoryListWithSubCategory`,
         );
         setCategoriesList(res.data.data);
       } catch (error) {
